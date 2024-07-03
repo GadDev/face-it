@@ -36,44 +36,46 @@ export const Feed = () => {
   const [posts, setPosts] = useState<Post[]>([])
   const totalPosts = useRef(0)
 
+  // const page = useRef(1)
+
   const dispatch = useDispatch()
 
   // Conditionally skip the query if the data for the current page is already loaded
-  const skipQuery = posts.length > 0 && posts.length >= page * 20
-  console.log('skipQuery', skipQuery)
-  const { data, error, isLoading, isFetching } = useGetPostsQuery(page, {
-    skip: skipQuery,
-  })
+  // const skipQuery = posts.length > 0 && posts.length >= page * 20
+  // console.log('skipQuery', skipQuery)
+  const { data, error, isLoading, isFetching } = useGetPostsQuery(page)
   // const [addNewPost] = useAddNewPostMutation()
   // console.log('data', data)
 
   //Merge new data with existing posts
-  useEffect(() => {
-    console.log('hello 2', data)
-    if (data?.posts) {
-      setPosts((prevPosts) => {
-        const newPosts = data.posts.filter(
-          (newPost: any) => !prevPosts.some((post) => post.id === newPost.id),
-        )
-        return [...prevPosts, ...newPosts]
-      })
-      totalPosts.current = data.totalCount
-    }
-  }, [data])
+  // useEffect(() => {
+  //   console.log('hello 2', data)
+  //   if (data?.posts) {
+  //     setPosts((prevPosts) => {
+  //       const newPosts = data.posts.filter(
+  //         (newPost: any) => !prevPosts.some((post) => post.id === newPost.id),
+  //       )
+  //       return [...prevPosts, ...newPosts]
+  //     })
+  //     totalPosts.current = data.totalCount
+  //   }
+  // }, [data])
 
   // Infinite scroll
   useEffect(() => {
-    console.log('hello 3', data)
     const handleScroll = () => {
       const { scrollTop, clientHeight, scrollHeight } = document.documentElement
 
       if (
-        scrollTop + clientHeight >= scrollHeight - 20 &&
+        scrollTop + clientHeight >= scrollHeight - 200 &&
         !isFetching &&
-        posts.length < totalPosts.current
+        data?.posts &&
+        data.posts.length < data?.totalCount
       ) {
         console.log('hello')
+        // page.current++
         setPage(page + 1)
+        dispatch(setUserNavigation({ scrollY: window.scrollY, page: page + 1 }))
       }
     }
 
@@ -82,7 +84,7 @@ export const Feed = () => {
     return function () {
       window.removeEventListener('scroll', handleScroll)
     }
-  }, [page, posts])
+  }, [data])
 
   // Highlight new posts
   // useEffect(() => {
@@ -180,11 +182,11 @@ export const Feed = () => {
   }
   if (error) return <Error />
 
-  if (!posts.length) return <div>No posts found</div>
+  if (!data?.posts.length) return <div>No posts found</div>
 
   return (
     <>
-      {posts.map((post: Post, index: number) => (
+      {data?.posts.map((post: Post, index: number) => (
         <article
           key={`post-${uuidv4()}`}
           onClick={() => handleNavigation(post.id)}

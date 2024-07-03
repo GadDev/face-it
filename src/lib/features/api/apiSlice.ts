@@ -13,28 +13,28 @@ export const apiSlice = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: 'https://jsonplaceholder.typicode.com',
   }),
-  tagTypes: ['Post'],
+  tagTypes: ['Posts', 'Post'],
   // The "endpoints" represent operations and requests for this server
   endpoints: (builder) => ({
     // The `getPosts` endpoint is a "query" operation that returns data
-    getPosts: builder.query<PostsResponse, number>({
+    getPosts: builder.query<PostsResponse, number | void>({
       // The URL for the request is '/fakeApi/posts'
       query: (page = 1) => `posts?_page=${page}&_limit=20`,
-      providesTags: (result: any, error, arg) => [
-        'Post',
-        ...(result?.posts.map(({ id }: { id: number }) => ({
-          type: 'Post',
-          id,
-        })) || []),
-      ],
+      providesTags: (result, error, page) =>
+        result
+          ? [
+              // Provides a tag for each post in the current page,
+              // as well as the 'PARTIAL-LIST' tag.
+              ...result.posts.map(({ id }) => ({ type: 'Posts' as const, id })),
+              { type: 'Posts', id: 'PARTIAL-LIST' },
+            ]
+          : [{ type: 'Posts', id: 'PARTIAL-LIST' }],
       // Only have one cache entry because the arg always maps to one string
       serializeQueryArgs: ({ endpointName }) => {
         return endpointName
       },
       // Always merge incoming data to the cache entry
       merge: (currentCache, newItems) => {
-        console.log('newItems', newItems.posts)
-        console.log('currentCache', currentCache.posts)
         currentCache.posts.push(...newItems.posts)
       },
       // Refetch when the page arg changes
@@ -60,6 +60,20 @@ export const apiSlice = createApi({
         body: initialPost,
       }),
       invalidatesTags: ['Post'],
+    }),
+    deletePost: builder.mutation<{ success: boolean; id: number }, number>({
+      query(id) {
+        return {
+          url: `post/${id}`,
+          method: 'DELETE',
+        }
+      },
+      // Invalidates the tag for this Post `id`, as well as the `PARTIAL-LIST` tag,
+      // causing the `listPosts` query to re-fetch if a component is subscribed to the query.
+      invalidatesTags: (result, error, id) => [
+        { type: 'Posts', id },
+        { type: 'Posts', id: 'PARTIAL-LIST' },
+      ],
     }),
     getUsers: builder.query<User[], void>({
       // The URL for the request is '/fakeApi/users'
