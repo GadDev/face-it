@@ -1,0 +1,11 @@
+# Not needed as we are bundling the whole app
+node_modules
+.dockerignore
+# Log files
+logs
+*.log
+npm-debug.log*
+README.md
+.next
+.git
+Dockerfile
