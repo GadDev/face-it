@@ -12,6 +12,8 @@ export const PostItem = ({
   userId,
   highlighted,
 }: PostItemProps) => {
+  console.log('PostItem rendered')
+  console.log('highlighted', highlighted)
   return (
     <div
       className={`overflow-hidden rounded-lg bg-white shadow-sm dark:bg-black ${highlighted ? 'dark:bg-red bg-amber-400' : ''}`}
@@ -26,7 +28,9 @@ export const PostItem = ({
           <p className="text-xs text-muted-foreground">Author</p>
         </div>
       </div>
-      <div className="px-5 py-8 dark:bg-gray-100/40">
+      <div
+        className={`px-5 py-8 dark:bg-gray-100/40 ${highlighted ? 'dark:bg-red bg-amber-400' : ''}`}
+      >
         <h2 className="mb-2 text-lg font-medium text-foreground">{title}</h2>
         <p className="line-clamp-3 text-sm text-muted-foreground">
           {body?.substring(0, 100)}...
