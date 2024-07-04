@@ -6,8 +6,9 @@ import {
 } from '@reduxjs/toolkit'
 import { apiSlice } from './features/api/apiSlice'
 import { userNavigationSlice } from './features/userNavigation/userNavigationSlice'
+import { newPostsSlice } from './features/newPosts/newPostsSlice'
 
-const rootReducer = combineSlices(userNavigationSlice, apiSlice)
+const rootReducer = combineSlices(userNavigationSlice, apiSlice, newPostsSlice)
 
 export type RootState = ReturnType<typeof rootReducer>
 

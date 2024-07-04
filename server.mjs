@@ -16,16 +16,15 @@ app.prepare().then(() => {
 
   io.on('connection', (socket) => {
     // When the user connect to the server, we log this.
-    console.log('A user connected')
-
-    socket.on('post', (post) => {
-      console.log(post)
-      io.emit('post', post)
-    })
+    console.log('New client connected');
 
     socket.on('disconnect', () => {
-      console.log('A user disconnected')
-    })
+      console.log('Client disconnected');
+    });
+
+    socket.on('new_post', (post) => {
+      io.emit('new_post', post); // Broadcast the new post to all clients
+    });
   })
 
   httpServer

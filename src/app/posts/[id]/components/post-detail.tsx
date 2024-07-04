@@ -5,10 +5,18 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { ArrowLeftIcon } from 'lucide-react'
 import { useGetPostQuery, useGetUserQuery } from '@/lib/features/api/apiSlice'
 import { Error } from '@/components/error'
+import { RootState } from '@/lib/store'
+import { useSelector } from 'react-redux'
 
 export const PostDetail = ({ id }: { id: number }) => {
+  const newPostsSelector = (state: RootState) => state.newPosts
+  const newPosts = useSelector(newPostsSelector)
+
   const { data, error, isLoading } = useGetPostQuery(id)
   const { data: user } = useGetUserQuery(data?.userId || 1)
+
+  const postFromNewPosts = newPosts.find((post) => post.id === id)
+  const post = error ? postFromNewPosts : data
 
   if (isLoading) {
     return (
@@ -18,7 +26,8 @@ export const PostDetail = ({ id }: { id: number }) => {
       </div>
     )
   }
-  if (error) return <Error />
+
+  if (error && !post) return <Error />
 
   return (
     <>
@@ -35,7 +44,7 @@ export const PostDetail = ({ id }: { id: number }) => {
       <div className="flex flex-col items-center justify-center px-4 py-8 md:px-6 md:py-12">
         <div className="mb-6 flex flex-col items-center">
           <Avatar className="mb-2">
-            <AvatarImage src={`https://i.pravatar.cc/150?img=${data.userId}`} />
+            <AvatarImage src={`https://i.pravatar.cc/150?img=${post.userId}`} />
             <AvatarFallback>{user?.name}</AvatarFallback>
           </Avatar>
           <div className="text-center">
@@ -44,8 +53,8 @@ export const PostDetail = ({ id }: { id: number }) => {
           </div>
         </div>
         <article className="prose prose-gray dark:prose-invert max-w-2xl">
-          <h1 className="md:text-3x m-5 text-2xl font-bold ">{data.title}</h1>
-          <p>{data.body}</p>
+          <h1 className="md:text-3x m-5 text-2xl font-bold ">{post.title}</h1>
+          <p>{post.body}</p>
         </article>
       </div>
     </>

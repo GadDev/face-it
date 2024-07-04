@@ -3,7 +3,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import type { Post } from '@/lib/features/api/types'
 
 interface PostItemProps extends Partial<Post> {
-  highlighted: boolean
+  highlighted?: boolean
 }
 
 export const PostItem = ({
