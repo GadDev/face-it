@@ -2,10 +2,10 @@
 
 A web application built with Next.js and Redux.
 
-![Statements](https://img.shields.io/badge/statements-89.83%25-yellow.svg?style=flat&logo=jest)
-![Branches](https://img.shields.io/badge/branches-91.66%25-brightgreen.svg?style=flat&logo=jest)
-![Functions](https://img.shields.io/badge/functions-65.62%25-red.svg?style=flat&logo=jest)
-![Lines](https://img.shields.io/badge/lines-89.83%25-yellow.svg?style=flat&logo=jest)
+![Statements](https://img.shields.io/badge/statements-82.35%25-yellow.svg?style=flat&logo=jest)
+![Branches](https://img.shields.io/badge/branches-92.85%25-brightgreen.svg?style=flat&logo=jest)
+![Functions](https://img.shields.io/badge/functions-52.27%25-red.svg?style=flat&logo=jest)
+![Lines](https://img.shields.io/badge/lines-82.35%25-yellow.svg?style=flat&logo=jest)
 
 ## Table of Contents
 

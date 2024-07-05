@@ -57,7 +57,7 @@ export const NewPostsLoader = ({
       socket.off('new_post')
       clearInterval(interval)
     }
-  }, [dispatch, socket])
+  }, [])
 
   return (
     <>

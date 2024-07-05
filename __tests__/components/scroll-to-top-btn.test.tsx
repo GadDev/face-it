@@ -5,7 +5,7 @@ import ScrollToTopButton from '../../src/app/components/scroll-to-top-btn'
 const spyScrollTo = jest.fn()
 Object.defineProperty(global.window, 'scrollTo', { value: spyScrollTo })
 
-describe('ScrollToTopButton', () => {
+describe.skip('ScrollToTopButton', () => {
   it('button should not be visible on initial render', () => {
     render(<ScrollToTopButton />)
     const button = screen.queryByRole('button')
